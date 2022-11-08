@@ -131,12 +131,21 @@ class GMM:
         bic = np.zeros(self.max_tries)
         models = []
         for i in range(self.max_tries):
-            old_means = np.random.choice(
-                range(-10, 10), replace=False, size=self.n_components
-            )
-            old_covariances = np.ones(self.n_components)
-            old_weights = np.random.rand(self.n_components)
-            old_weights /= old_weights.sum()
+            if self.means is not None:
+                old_means = self.means.copy()
+            else:
+                old_means = np.random.choice(
+                    range(-10, 10), replace=False, size=self.n_components
+                )
+            if self.covariances is not None:
+                old_covariances = self.covariances.copy()
+            else:
+                old_covariances = np.ones(self.n_components)
+            if self.weights is not None:
+                old_weights = self.weights.copy()
+            else:
+                old_weights = np.random.rand(self.n_components)
+                old_weights /= old_weights.sum()
 
             for j in range(self.max_iter):
                 old_weights = old_weights[:, np.newaxis]
